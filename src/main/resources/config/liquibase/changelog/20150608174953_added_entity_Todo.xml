@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Todo.
+    -->
+    <changeSet id="20150608174953" author="jhipster">
+        <createTable tableName="TODO">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="due_at" type="timestamp"/>
+            <column name="owner_id" type="bigint"/>
+        </createTable>
+        <dropDefaultValue tableName="TODO" columnName="due_at" columnDataType="datetime"/>
+
+        
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="TODO"
+                                 constraintName="fk_todo_owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="JHI_USER"/>
+
+    </changeSet>
+</databaseChangeLog>

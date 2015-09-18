@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: hateoas
+  cloud:
+    config:
+      uri:  http://localhost:8888
+      failFast: true
+encrypt:
+  failOnError: false
+  keyStore:
+    location: classpath:keystore.jks
+    password: ${KEYSTORE_PASSWORD}
+    alias: main
