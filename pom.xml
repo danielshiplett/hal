@@ -55,6 +55,21 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>biz.paluch.redis</groupId>
+			<artifactId>spinach</artifactId>
+			<version>0.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.xetorthio</groupId>
+			<artifactId>jedisque</artifactId>
+			<version>0.0.4</version>
+		</dependency>
+		<dependency>
 			<groupId>fr.norad.logback.prettier</groupId>
 			<artifactId>logback-prettier</artifactId>
 			<version>0.5</version>
@@ -566,7 +581,7 @@
 					<defaultSchemaName></defaultSchemaName>
 					<username>hateos</username>
 					<password></password>
-					<referenceUrl>hibernate:spring:org.brewman.hateos.domain?dialect=org.hibernate.dialect.PostgreSQL82Dialect</referenceUrl>
+					<referenceUrl>hibernate:spring:org.brewman.hal.domain?dialect=org.hibernate.dialect.PostgreSQL82Dialect</referenceUrl>
 					<verbose>true</verbose>
 					<logging>debug</logging>
 				</configuration>

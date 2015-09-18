@@ -15,7 +15,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.brewman.hateos" level="${logback.loglevel}"/>
+    <logger name="org.brewman.hal" level="${logback.loglevel}"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

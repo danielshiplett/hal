@@ -12,27 +12,27 @@
             overflowToDisk="false"
             />
 
-    <cache name="org.brewman.hateos.domain.User"
+    <cache name="org.brewman.hal.domain.User"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="org.brewman.hateos.domain.Authority"
+    <cache name="org.brewman.hal.domain.Authority"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="org.brewman.hateos.domain.User.authorities"
+    <cache name="org.brewman.hal.domain.User.authorities"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="org.brewman.hateos.domain.PersistentToken"
+    <cache name="org.brewman.hal.domain.PersistentToken"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="org.brewman.hateos.domain.User.persistentTokens"
+    <cache name="org.brewman.hal.domain.User.persistentTokens"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="org.brewman.hateos.domain.PersistentAuditEvent"
+    <cache name="org.brewman.hal.domain.PersistentAuditEvent"
            timeToLiveSeconds="3600">
     </cache>
 </ehcache>
