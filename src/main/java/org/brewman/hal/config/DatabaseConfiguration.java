@@ -1,10 +1,11 @@
 package org.brewman.hal.config;
 
-import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import java.util.Arrays;
+
+import javax.sql.DataSource;
+
 import liquibase.integration.spring.SpringLiquibase;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
+import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableJpaRepositories("org.brewman.hal.repository")
@@ -30,7 +33,8 @@ import java.util.Arrays;
 @EnableTransactionManagement
 public class DatabaseConfiguration implements EnvironmentAware {
 
-    private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    private final Logger log = LoggerFactory
+            .getLogger(DatabaseConfiguration.class);
 
     private RelaxedPropertyResolver dataSourcePropertyResolver;
 
@@ -44,8 +48,10 @@ public class DatabaseConfiguration implements EnvironmentAware {
     @Override
     public void setEnvironment(Environment env) {
         this.env = env;
-        this.dataSourcePropertyResolver = new RelaxedPropertyResolver(env, "spring.datasource.");
-        this.liquiBasePropertyResolver = new RelaxedPropertyResolver(env, "liquiBase.");
+        this.dataSourcePropertyResolver = new RelaxedPropertyResolver(env,
+                "spring.datasource.");
+        this.liquiBasePropertyResolver = new RelaxedPropertyResolver(env,
+                "liquiBase.");
     }
 
     @Bean(destroyMethod = "shutdown")
@@ -53,23 +59,36 @@ public class DatabaseConfiguration implements EnvironmentAware {
     @Profile("!" + Constants.SPRING_PROFILE_CLOUD)
     public DataSource dataSource() {
         log.debug("Configuring Datasource");
-        if (dataSourcePropertyResolver.getProperty("url") == null && dataSourcePropertyResolver.getProperty("databaseName") == null) {
-            log.error("Your database connection pool configuration is incorrect! The application" +
-                    " cannot start. Please check your Spring profile, current profiles are: {}",
+        log.debug("url: {}", dataSourcePropertyResolver.getProperty("url"));
+        log.debug("databaseName: {}",
+                dataSourcePropertyResolver.getProperty("databaseName"));
+
+        if (dataSourcePropertyResolver.getProperty("url") == null
+                && dataSourcePropertyResolver.getProperty("databaseName") == null) {
+            log.error(
+                    "Your database connection pool configuration is incorrect! The application"
+                            + " cannot start. Please check your Spring profile, current profiles are: {}",
                     Arrays.toString(env.getActiveProfiles()));
 
-            throw new ApplicationContextException("Database connection pool is not configured correctly");
+            throw new ApplicationContextException(
+                    "Database connection pool is not configured correctly");
         }
         HikariConfig config = new HikariConfig();
-        config.setDataSourceClassName(dataSourcePropertyResolver.getProperty("dataSourceClassName"));
-        if(StringUtils.isEmpty(dataSourcePropertyResolver.getProperty("url"))) {
-            config.addDataSourceProperty("databaseName", dataSourcePropertyResolver.getProperty("databaseName"));
-            config.addDataSourceProperty("serverName", dataSourcePropertyResolver.getProperty("serverName"));
+        config.setDataSourceClassName(dataSourcePropertyResolver
+                .getProperty("dataSourceClassName"));
+        if (StringUtils.isEmpty(dataSourcePropertyResolver.getProperty("url"))) {
+            config.addDataSourceProperty("databaseName",
+                    dataSourcePropertyResolver.getProperty("databaseName"));
+            config.addDataSourceProperty("serverName",
+                    dataSourcePropertyResolver.getProperty("serverName"));
         } else {
-            config.addDataSourceProperty("url", dataSourcePropertyResolver.getProperty("url"));
+            config.addDataSourceProperty("url",
+                    dataSourcePropertyResolver.getProperty("url"));
         }
-        config.addDataSourceProperty("user", dataSourcePropertyResolver.getProperty("username"));
-        config.addDataSourceProperty("password", dataSourcePropertyResolver.getProperty("password"));
+        config.addDataSourceProperty("user",
+                dataSourcePropertyResolver.getProperty("username"));
+        config.addDataSourceProperty("password",
+                dataSourcePropertyResolver.getProperty("password"));
 
         if (metricRegistry != null) {
             config.setMetricRegistry(metricRegistry);
@@ -84,10 +103,13 @@ public class DatabaseConfiguration implements EnvironmentAware {
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         liquibase.setContexts(liquiBasePropertyResolver.getProperty("context"));
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
-            if ("org.h2.jdbcx.JdbcDataSource".equals(dataSourcePropertyResolver.getProperty("dataSourceClassName"))) {
+            if ("org.h2.jdbcx.JdbcDataSource".equals(dataSourcePropertyResolver
+                    .getProperty("dataSourceClassName"))) {
                 liquibase.setShouldRun(true);
-                log.warn("Using '{}' profile with H2 database in memory is not optimal, you should consider switching to" +
-                    " MySQL or Postgresql to avoid rebuilding your database upon each start.", Constants.SPRING_PROFILE_FAST);
+                log.warn(
+                        "Using '{}' profile with H2 database in memory is not optimal, you should consider switching to"
+                                + " MySQL or Postgresql to avoid rebuilding your database upon each start.",
+                        Constants.SPRING_PROFILE_FAST);
             } else {
                 liquibase.setShouldRun(false);
             }
